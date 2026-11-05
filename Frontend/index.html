@@ -12,21 +12,35 @@
     <header class="topbar">
       <a class="brand" href="./index.html" aria-label="청도 농가 도우미 홈">
         <span class="brand-mark" aria-hidden="true">청</span>
-        <span>청도 농가 도우미</span>
+        <span class="brand-name">청도 농가 도우미</span>
       </a>
-      <span class="demo-badge"><span aria-hidden="true"></span> 시연용 모의 서비스</span>
+      <a class="top-link" href="#product-form">상품 초안 만들기 <span aria-hidden="true">↗</span></a>
     </header>
 
     <main class="page-shell">
       <section class="page-heading" aria-labelledby="page-title">
-        <p class="eyebrow">사진 한 장으로 시작해요</p>
-        <h1 id="page-title">상품 등록 초안 만들기</h1>
-        <p class="page-description">수확물 사진을 올리고, 상품 정보를 확인한 뒤 백엔드 미리보기로 보내보세요.</p>
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> 농가의 수고를 덜어드려요</p>
+          <h1 id="page-title">사진 한 장으로,<br><em>상품 준비</em>를 쉽게</h1>
+          <p class="page-description">수확물 사진을 올리면 AI가 상품 정보를 살펴보고<br class="desktop-break"> 작성에 필요한 초안을 만들어 드립니다.</p>
+          <span class="hero-footnote"><span aria-hidden="true">✳</span> 어렵고 긴 입력은 잠시 내려놓으세요.</span>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <span class="hero-mark-ring"></span>
+          <span class="hero-mark-center">한 장의<br>사진에서</span>
+          <span class="hero-mark-caption">CHEONGDO · FARM ASSIST</span>
+        </div>
       </section>
 
+      <ol class="stepper" aria-label="상품 초안 만들기 진행 단계">
+        <li class="is-current" aria-current="step"><span>01</span> 사진 올리기</li>
+        <li><span>02</span> 내용 확인하기</li>
+        <li><span>03</span> 초안 완성</li>
+      </ol>
+
       <aside class="notice" role="note">
-        <span class="notice-icon" aria-hidden="true">!</span>
-        <p><strong>현재는 연결 확인을 위한 시연 화면입니다.</strong> 실제 AI 사진 분석은 아직 연결되지 않았습니다. 사진은 이 화면에서 미리보기만 하며 서버로 전송하지 않습니다. 초안과 백엔드 응답은 반드시 직접 확인해 주세요. 네이버에 상품을 등록하지 않습니다.</p>
+        <span class="notice-icon" aria-hidden="true">i</span>
+        <p><strong>AI가 만든 초안은 꼭 확인해 주세요.</strong> 사진은 분석을 위해 백엔드로 전송됩니다. AI가 잘못 읽을 수 있으니 중량·가격·수량을 확인하고 고쳐주세요. 이 화면에서는 네이버에 상품을 등록하지 않습니다.</p>
       </aside>
 
       <div id="app-status" class="status-message" role="status" aria-live="polite"></div>
@@ -34,63 +48,104 @@
       <section class="panel photo-panel" aria-labelledby="photo-title">
         <div class="panel-heading">
           <span class="step-number" aria-hidden="true">1</span>
-          <div>
+          <div class="panel-title-copy">
+            <p class="panel-kicker">STEP ONE · PHOTO</p>
             <h2 id="photo-title">수확물 사진 올리기</h2>
             <p>상자와 수확물이 잘 보이는 사진을 선택해 주세요.</p>
           </div>
         </div>
         <label class="upload-area" for="product-photo">
-          <span class="upload-icon" aria-hidden="true">＋</span>
-          <span class="upload-title">사진 선택하기</span>
-          <span class="upload-hint">JPG, PNG 또는 WEBP · 10MB 이하</span>
+          <span class="upload-icon" aria-hidden="true">↟</span>
+          <span class="upload-title">사진을 여기에 담아주세요</span>
+          <span class="upload-hint">사진을 고르면 AI가 살펴봅니다</span>
+          <span class="upload-file-types">JPG · PNG · WEBP <i></i> 10MB 이하</span>
           <input id="product-photo" type="file" accept="image/jpeg,image/png,image/webp">
         </label>
         <div id="photo-preview-wrap" class="photo-preview-wrap" hidden>
-          <img id="photo-preview" alt="선택한 수확물 사진 미리보기">
-          <p id="photo-name"></p>
+          <button id="photo-zoom-button" class="photo-zoom-button" type="button" aria-label="선택한 수확물 사진 크게 보기">
+            <img id="photo-preview" alt="선택한 수확물 사진 미리보기">
+            <span>사진 크게 보기 <span aria-hidden="true">↗</span></span>
+          </button>
+          <div class="photo-file-info"><p id="photo-name"></p></div>
         </div>
         <div class="panel-actions panel-actions--start">
-          <button id="demo-draft-button" class="secondary-button" type="button" disabled>데모용 초안 불러오기</button>
-          <p class="field-hint">데모용 초안은 사진을 분석한 결과가 아니라 예시 값입니다.</p>
+          <div class="upload-action-copy">
+            <strong>사진을 고른 다음</strong>
+            <span>분석하기 버튼을 눌러주세요.</span>
+          </div>
+          <button id="analyze-button" class="primary-button" type="button" disabled><span aria-hidden="true">✳</span> 사진 분석하기</button>
+        </div>
+      </section>
+
+      <section id="analysis-panel" class="panel analysis-panel" aria-labelledby="analysis-title" hidden>
+        <div class="panel-heading">
+          <span class="result-check" aria-hidden="true">AI</span>
+          <div class="panel-title-copy">
+            <p class="panel-kicker">YOUR PHOTO, READ BY AI</p>
+            <h2 id="analysis-title">사진에서 확인한 내용</h2>
+            <p id="analysis-caption"></p>
+          </div>
+        </div>
+        <div id="confirmation-box" class="confirmation-box" hidden>
+          <strong>다음 항목을 꼭 확인해 주세요</strong>
+          <ul id="confirmation-list"></ul>
+        </div>
+        <div id="visible-text-box" class="visible-text-box" hidden>
+          <strong>사진에서 읽은 글자</strong>
+          <ul id="visible-text-list"></ul>
         </div>
       </section>
 
       <form id="product-form" class="panel" novalidate>
         <div class="panel-heading">
           <span class="step-number" aria-hidden="true">2</span>
-          <div>
+          <div class="panel-title-copy">
+            <p class="panel-kicker">STEP TWO · REVIEW</p>
             <h2>상품 정보 확인하기</h2>
-            <p>초안은 직접 고칠 수 있어요. 가격은 사진으로 알 수 없으니 직접 입력해 주세요.</p>
+            <p>AI가 채운 내용도 직접 확인하고, 모르는 항목은 알맞게 고쳐주세요.</p>
           </div>
         </div>
 
         <div class="field-grid">
           <div class="field">
-            <label for="product-name">상품 이름 <span class="required-mark">필수</span></label>
-            <input id="product-name" name="productName" type="text" maxlength="100" placeholder="예: 청도 반시" autocomplete="off" required>
+            <label for="product-name">상품 이름</label>
+            <input id="product-name" name="productName" type="text" maxlength="100" placeholder="분석 결과가 여기에 표시돼요" autocomplete="off">
           </div>
           <div class="field">
-            <label for="product-price">판매 가격 <span class="required-mark">필수</span></label>
+            <label for="fruit-type">과일 종류</label>
+            <input id="fruit-type" name="fruitType" type="text" placeholder="예: 감">
+          </div>
+          <div class="field">
+            <label for="product-size">크기·등급</label>
+            <input id="product-size" name="size" type="text" placeholder="사진에서 확인되지 않으면 비워둡니다">
+          </div>
+          <div class="field">
+            <label for="product-price">판매 가격</label>
             <div class="input-with-unit">
-              <input id="product-price" name="price" type="number" min="1" step="1" inputmode="numeric" placeholder="예: 18000" required>
+              <input id="product-price" name="price" type="number" min="1" step="1" inputmode="numeric" placeholder="직접 확인해 입력해 주세요">
               <span>원</span>
             </div>
+            <p class="field-hint">사진에 가격표가 있을 때만 읽힐 수 있어요. 실제 판매 가격을 확인해 주세요.</p>
           </div>
           <div class="field">
-            <label for="box-count">박스 수 <span class="required-mark">필수</span></label>
+            <label for="box-count">박스 수</label>
             <div class="input-with-unit">
-              <input id="box-count" name="boxCount" type="number" min="1" step="1" inputmode="numeric" placeholder="예: 3" required>
+              <input id="box-count" name="boxCount" type="number" min="1" step="1" inputmode="numeric" placeholder="확인 후 입력해 주세요">
               <span>개</span>
             </div>
-            <p class="field-hint">백엔드 미리보기의 boxCount 값입니다. 재고 수량과 같은 뜻인지 담당자 확인이 필요합니다.</p>
+            <p class="field-hint">AI가 사진에서 읽은 수량도 실제 재고와 다를 수 있어요.</p>
           </div>
           <div class="field">
-            <label for="weight-kg">한 상자 중량 <span class="required-mark">필수</span></label>
+            <label for="weight-kg">중량</label>
             <div class="input-with-unit">
-              <input id="weight-kg" name="weightKg" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="예: 5" required>
+              <input id="weight-kg" name="weightKg" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="저울 또는 포장 표시를 확인해 주세요">
               <span>kg</span>
             </div>
-            <p class="field-hint">중량은 사진만으로 정확히 알기 어려워요. 저울로 확인해 주세요.</p>
+            <p class="field-hint">포장에 적힌 중량을 우선 확인하고, 추정값은 반드시 저울로 확인해 주세요.</p>
+          </div>
+          <div class="field field--wide">
+            <label for="product-description">상품 설명 초안</label>
+            <textarea id="product-description" name="productDescription" rows="4" maxlength="1000" placeholder="사진에서 확인할 수 있는 정보로 만든 설명이 여기에 표시돼요"></textarea>
           </div>
         </div>
 
@@ -98,47 +153,66 @@
           <span>참고: 1kg당 상품 가격</span>
           <strong id="unit-price">가격과 중량을 입력하면 계산돼요.</strong>
         </div>
-
         <div class="panel-actions">
-          <p>내용을 확인한 다음 백엔드에 보내면, 모의 응답을 받아볼 수 있어요.</p>
-          <button id="preview-button" class="primary-button" type="submit">백엔드 미리보기 요청</button>
+          <p>내 상품에 맞도록 고쳐주세요. 여기서 네이버로 전송되지는 않습니다.</p>
+          <button id="complete-review-button" class="secondary-button" type="button" disabled>내용 확인 완료</button>
         </div>
       </form>
 
-      <section class="panel connection-panel" aria-labelledby="connection-title">
-        <div class="panel-heading">
-          <span class="step-number" aria-hidden="true">3</span>
-          <div>
-            <h2 id="connection-title">백엔드 연결</h2>
-            <p>백엔드 담당자가 알려준 주소를 입력해 주세요. 로컬 실행 기본값은 localhost:3000입니다.</p>
+      <details class="panel connection-panel">
+        <summary class="connection-summary">
+          <span class="settings-mark" aria-hidden="true">···</span>
+          <span class="connection-summary-copy">
+            <span class="panel-kicker">DEVELOPER SETTINGS</span>
+            <strong>서비스 연결 설정</strong>
+            <small>개발 또는 테스트 중에만 변경합니다.</small>
+          </span>
+          <span class="connection-chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="connection-content">
+          <div class="panel-heading">
+            <span class="step-number" aria-hidden="true">설정</span>
+            <div class="panel-title-copy">
+              <p class="panel-kicker">CONNECTION</p>
+              <h2 id="connection-title">AI 백엔드 주소</h2>
+              <p>로컬 실행 시 Aspire 대시보드에 표시된 AI 서비스 주소를 입력해 주세요.</p>
+            </div>
           </div>
-        </div>
-        <div class="connection-controls">
-          <div class="field">
-            <label for="api-base-url">백엔드 주소</label>
-            <input id="api-base-url" type="url" inputmode="url" value="http://localhost:3000" placeholder="https://예시주소.azurewebsites.net">
+          <div class="connection-controls">
+            <div class="field">
+              <label for="api-base-url">AI 서비스 주소</label>
+              <input id="api-base-url" type="url" inputmode="url" value="http://localhost:5000" placeholder="https://서비스주소">
+            </div>
+            <button id="health-button" class="secondary-button" type="button">연결 확인</button>
           </div>
-          <button id="health-button" class="secondary-button" type="button">연결 확인</button>
+          <p class="field-hint">AI 서비스의 /health 응답을 확인합니다. Azure OpenAI 설정 상태는 실제 사진 분석 요청 때 확인됩니다.</p>
         </div>
-        <p class="field-hint">다른 주소에서 열리는 백엔드는 CORS 허용 설정이 필요할 수 있습니다. 연결이 안 되면 주소와 브라우저 오류를 백엔드 담당자에게 전달해 주세요.</p>
-      </section>
+      </details>
 
-      <section id="result-panel" class="panel result-panel" aria-labelledby="result-title" hidden>
+      <section id="raw-result-panel" class="panel raw-result-panel" aria-labelledby="raw-result-title" hidden>
         <div class="panel-heading">
-          <span class="result-check" aria-hidden="true">✓</span>
-          <div>
-            <h2 id="result-title">백엔드 응답을 받았어요</h2>
-            <p id="result-caption"></p>
+          <span class="step-number" aria-hidden="true">응답</span>
+          <div class="panel-title-copy">
+            <p class="panel-kicker">ANALYSIS DETAILS</p>
+            <h2 id="raw-result-title">AI 백엔드 응답</h2>
+            <p id="provider-label"></p>
           </div>
         </div>
-        <dl id="result-details" class="result-grid"></dl>
         <details class="raw-response">
-          <summary>받은 응답 내용 보기</summary>
+          <summary>받은 JSON 응답 보기</summary>
           <pre id="raw-response"></pre>
         </details>
       </section>
     </main>
 
-    <footer class="footer">청도 농가 도우미 · 지금은 백엔드와의 모의 통신만 확인합니다.</footer>
+    <dialog id="photo-dialog" class="photo-dialog" aria-label="선택한 사진 크게 보기">
+      <div class="photo-dialog-heading">
+        <p>선택한 수확물 사진</p>
+        <button id="close-photo-dialog" class="secondary-button" type="button">닫기</button>
+      </div>
+      <img id="photo-large-preview" alt="크게 보기 중인 수확물 사진">
+    </dialog>
+
+    <footer class="footer">청도 농가 도우미 · AI 분석은 초안이며 실제 상품 정보는 사용자가 확인해야 합니다.</footer>
   </body>
 </html>
