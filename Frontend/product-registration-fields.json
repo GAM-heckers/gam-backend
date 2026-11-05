@@ -1,0 +1,582 @@
+{
+  "title": "네이버 스마트스토어 상품 등록 입력 정보",
+  "version": 1,
+  "language": "ko",
+  "scope": {
+    "productType": "일반 농산물/식품 상품",
+    "notes": [
+      "이 파일은 등록 준비물 목록이며, 네이버 API에 그대로 전송하는 요청 본문은 아닙니다.",
+      "실제 필수 여부와 허용 값은 네이버 최종 카테고리, 판매자 계정 설정, 상품 특성에 따라 달라질 수 있습니다.",
+      "예시값은 작성 형식 참고용입니다. 실제 상품/판매자 정보로 확인하고 바꿔야 합니다.",
+      "네이버 상품 등록 응답의 invalidInputs와 message가 최종 검증 기준입니다."
+    ]
+  },
+  "sections": [
+    {
+      "id": "product",
+      "title": "상품 및 판매 정보",
+      "fields": [
+        {
+          "id": "name",
+          "label": "상품명",
+          "apiPath": "originProduct.name",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "청도 감 10kg",
+          "notes": "실제 상품의 품목, 구성, 중량을 정확하게 표시합니다."
+        },
+        {
+          "id": "category",
+          "label": "네이버 최종 카테고리 ID",
+          "apiPath": "originProduct.leafCategoryId",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "50002167",
+          "notes": "생감에 대해 확인된 예시 ID입니다. 곶감 등 다른 상품에는 해당 카테고리 ID를 다시 확인해야 합니다."
+        },
+        {
+          "id": "status-type",
+          "label": "판매 상태",
+          "apiPath": "originProduct.statusType",
+          "type": "enum",
+          "requiredInForm": true,
+          "allowedValues": ["SALE", "WAIT"],
+          "example": "WAIT",
+          "notes": "테스트 시 판매 대기(WAIT)를 권장합니다."
+        },
+        {
+          "id": "price",
+          "label": "판매 가격",
+          "apiPath": "originProduct.salePrice",
+          "type": "integer",
+          "unit": "KRW",
+          "requiredInForm": true,
+          "example": 30000
+        },
+        {
+          "id": "stock",
+          "label": "재고 수량",
+          "apiPath": "originProduct.stockQuantity",
+          "type": "integer",
+          "requiredInForm": true,
+          "example": 5,
+          "notes": "판매 단위 기준 재고 수량입니다. 예를 들어 10kg 상자 5개면 5로 입력합니다."
+        },
+        {
+          "id": "detail",
+          "label": "상품 상세 설명",
+          "apiPath": "originProduct.detailContent",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "상품 구성, 보관 방법, 배송 안내를 입력합니다."
+        },
+        {
+          "id": "image-file",
+          "label": "대표 상품 이미지 파일",
+          "apiPath": "originProduct.images.representativeImage.url",
+          "type": "imageUpload",
+          "requiredInForm": true,
+          "acceptedFormats": ["JPG", "JPEG", "GIF", "PNG", "BMP"],
+          "maxSizeMB": 10,
+          "notes": "이미지를 네이버에 업로드한 뒤 응답으로 받은 공개 URL이 상품 등록 요청에 사용됩니다. 파일을 선택하는 것만으로는 업로드되지 않습니다."
+        },
+        {
+          "id": "shopping-registration",
+          "label": "네이버쇼핑 등록 여부",
+          "apiPath": "smartstoreChannelProduct.naverShoppingRegistration",
+          "type": "boolean",
+          "requiredInForm": true,
+          "example": false
+        },
+        {
+          "id": "display-status",
+          "label": "스마트스토어 노출 상태",
+          "apiPath": "smartstoreChannelProduct.channelProductDisplayStatusType",
+          "type": "enum",
+          "requiredInForm": true,
+          "allowedValues": ["ON", "SUSPENSION"],
+          "example": "SUSPENSION",
+          "notes": "테스트 시 노출 중지(SUSPENSION)를 권장합니다."
+        }
+      ]
+    },
+    {
+      "id": "origin-and-support",
+      "title": "원산지 및 판매자 안내",
+      "fields": [
+        {
+          "id": "minor-purchasable",
+          "label": "미성년자 구매 허용 여부",
+          "apiPath": "originProduct.detailAttribute.minorPurchasable",
+          "type": "boolean",
+          "requiredInForm": true,
+          "example": true
+        },
+        {
+          "id": "origin-search",
+          "label": "원산지 지역명 검색어",
+          "apiPath": null,
+          "type": "string",
+          "requiredInForm": true,
+          "example": "청도군",
+          "notes": "네이버 원산지 검색에 사용합니다."
+        },
+        {
+          "id": "origin-code",
+          "label": "원산지 코드",
+          "apiPath": "originProduct.detailAttribute.originAreaInfo.originAreaCode",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "0004820",
+          "notes": "검색 결과 중 실제 원산지와 일치하는 항목을 선택합니다. 청도군 코드 예시입니다."
+        },
+        {
+          "id": "origin-content",
+          "label": "원산지 표시명",
+          "apiPath": "originProduct.detailAttribute.originAreaInfo.content",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "국산:경상북도>청도군"
+        },
+        {
+          "id": "origin-plural",
+          "label": "원산지가 여러 곳인지 여부",
+          "apiPath": "originProduct.detailAttribute.originAreaInfo.plural",
+          "type": "boolean",
+          "requiredInForm": true,
+          "example": false
+        },
+        {
+          "id": "as-phone",
+          "label": "A/S 연락처",
+          "apiPath": "originProduct.detailAttribute.afterServiceInfo.afterServiceTelephoneNumber",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 판매자 연락처"
+        },
+        {
+          "id": "as-guide",
+          "label": "A/S 안내",
+          "apiPath": "originProduct.detailAttribute.afterServiceInfo.afterServiceGuideContent",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 문의 및 처리 방법"
+        }
+      ]
+    },
+    {
+      "id": "food-notice",
+      "title": "상품정보제공고시 - 현재 폼의 농산물/식품 항목",
+      "apiPath": "originProduct.detailAttribute.productInfoProvidedNotice.food",
+      "noticeTypeApiPath": "originProduct.detailAttribute.productInfoProvidedNotice.productInfoProvidedNoticeType",
+      "noticeType": "FOOD",
+      "fields": [
+        {
+          "id": "food-item",
+          "label": "품목 또는 상품명",
+          "apiPath": "food.foodItem",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "감"
+        },
+        {
+          "id": "food-weight",
+          "label": "중량",
+          "apiPath": "food.weight",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "10kg"
+        },
+        {
+          "id": "food-amount",
+          "label": "수량",
+          "apiPath": "food.amount",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "1박스"
+        },
+        {
+          "id": "food-size",
+          "label": "크기 또는 등급",
+          "apiPath": "food.size",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 선별 등급 또는 확인된 정보"
+        },
+        {
+          "id": "food-producer",
+          "label": "생산자",
+          "apiPath": "food.producer",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 생산자명"
+        },
+        {
+          "id": "food-pack-date",
+          "label": "포장일 안내",
+          "apiPath": "food.packDateText",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "주문일에 따라 상이"
+        },
+        {
+          "id": "food-consumption-date",
+          "label": "소비기한 또는 품질유지기한 안내",
+          "apiPath": "food.consumptionDateText",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 상품에 맞는 안내"
+        },
+        {
+          "id": "food-composition",
+          "label": "상품 구성",
+          "apiPath": "food.productComposition",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "감 10kg"
+        },
+        {
+          "id": "food-storage",
+          "label": "보관 방법",
+          "apiPath": "food.keep",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 보관 방법"
+        },
+        {
+          "id": "food-law",
+          "label": "관련 법령에 따른 표시사항",
+          "apiPath": "food.relevantLawContent",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "상품에 실제 적용되는 표시사항"
+        },
+        {
+          "id": "food-caution",
+          "label": "주의사항",
+          "apiPath": "food.adCaution",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 취급·표시 주의사항"
+        },
+        {
+          "id": "food-customer-service",
+          "label": "소비자 상담 연락처",
+          "apiPath": "food.customerServicePhoneNumber",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 소비자 상담 연락처"
+        },
+        {
+          "id": "food-quality",
+          "label": "품질보증 기준",
+          "apiPath": "food.qualityAssuranceStandard",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 품질보증 기준"
+        },
+        {
+          "id": "food-compensation",
+          "label": "소비자 피해 보상 절차",
+          "apiPath": "food.compensationProcedure",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 보상 절차"
+        },
+        {
+          "id": "food-troubleshooting",
+          "label": "분쟁 처리 및 문제 해결 안내",
+          "apiPath": "food.troubleShootingContents",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 처리 방법"
+        },
+        {
+          "id": "food-return-cost",
+          "label": "반품 비용·사유 안내",
+          "apiPath": "food.returnCostReason",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 반품 비용 및 사유"
+        },
+        {
+          "id": "food-no-refund",
+          "label": "반품·환불 제한 사유",
+          "apiPath": "food.noRefundReason",
+          "type": "string",
+          "requiredInForm": true,
+          "example": "실제 제한 사유"
+        }
+      ]
+    },
+    {
+      "id": "certification",
+      "title": "친환경 인증",
+      "requiredWhen": "네이버 카테고리 검증에서 인증 정보가 요구되는 경우",
+      "fields": [
+        {
+          "id": "certification-status",
+          "label": "인증 대상 여부",
+          "apiPath": "originProduct.detailAttribute.certificationTargetExcludeContent.greenCertifiedProductExclusionYn",
+          "type": "enum",
+          "requiredInForm": true,
+          "allowedValues": ["certified", "excluded"],
+          "notes": "현재 화면은 인증 보유 또는 인증 대상 아님을 선택합니다. 해당 상품의 실제 상태를 선택해야 합니다."
+        },
+        {
+          "id": "certification-id",
+          "label": "네이버 인증 정보 ID",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].certificationInfoId",
+          "type": "integer",
+          "requiredWhen": "certification-status가 certified인 경우",
+          "example": "네이버 인증 정보 조회 결과"
+        },
+        {
+          "id": "certification-kind",
+          "label": "인증 종류 코드",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].certificationKindType",
+          "type": "string",
+          "requiredWhen": "certification-status가 certified인 경우",
+          "example": "네이버가 허용하는 인증 종류 코드"
+        },
+        {
+          "id": "certification-number",
+          "label": "인증 번호",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].certificationNumber",
+          "type": "string",
+          "requiredWhen": "certification-status가 certified인 경우"
+        },
+        {
+          "id": "certification-name",
+          "label": "인증명",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].name",
+          "type": "string",
+          "requiredWhen": "certification-status가 certified인 경우"
+        },
+        {
+          "id": "certification-company",
+          "label": "인증기관",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].companyName",
+          "type": "string",
+          "requiredWhen": "certification-status가 certified인 경우"
+        },
+        {
+          "id": "certification-date",
+          "label": "인증일",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].certificationDate",
+          "type": "date",
+          "requiredWhen": "인증 정보와 네이버 검증에서 요구되는 경우"
+        },
+        {
+          "id": "certification-mark",
+          "label": "인증마크 표시 여부",
+          "apiPath": "originProduct.detailAttribute.productCertificationInfos[].certificationMark",
+          "type": "boolean",
+          "requiredWhen": "인증 정보가 있는 경우"
+        }
+      ]
+    },
+    {
+      "id": "unit-price",
+      "title": "단위가격 및 과세",
+      "fields": [
+        {
+          "id": "unit-price-yn",
+          "label": "단위가격 표시 여부",
+          "apiPath": "originProduct.detailAttribute.unitCapacity.unitPriceYn",
+          "type": "boolean",
+          "requiredInForm": true,
+          "notes": "네이버 오류에서 단위가격 표시 여부가 요구됐습니다."
+        },
+        {
+          "id": "total-capacity",
+          "label": "판매 총량",
+          "apiPath": "originProduct.detailAttribute.unitCapacity.totalCapacityValue",
+          "type": "number",
+          "requiredWhen": "단위가격 표시 여부가 true인 경우",
+          "example": 10,
+          "unit": "선택한 표시 단위 기준"
+        },
+        {
+          "id": "unit-capacity",
+          "label": "가격 기준 단위량",
+          "apiPath": "originProduct.detailAttribute.unitCapacity.unitCapacity",
+          "type": "number",
+          "requiredWhen": "단위가격 표시 여부가 true인 경우",
+          "example": 1
+        },
+        {
+          "id": "indication-unit",
+          "label": "단위가격 표시 단위",
+          "apiPath": "originProduct.detailAttribute.unitCapacity.indicationUnit",
+          "type": "string",
+          "requiredWhen": "단위가격 표시 여부가 true인 경우",
+          "example": "kg"
+        },
+        {
+          "id": "tax-type",
+          "label": "과세 유형",
+          "apiPath": "originProduct.detailAttribute.taxType",
+          "type": "enum",
+          "requiredInForm": true,
+          "allowedValues": ["TAX", "TAX_FREE", "ZERO_TAX"],
+          "notes": "판매자 세무 설정 및 상품에 맞는 값을 확인합니다."
+        }
+      ]
+    },
+    {
+      "id": "delivery-and-claims",
+      "title": "배송·교환·반품 설정",
+      "notes": [
+        "출고지/주소 ID, 택배사 코드 등은 판매자센터에 등록된 실제 정보를 사용합니다.",
+        "현재 폼에서 요구하는 필드라고 해서 모든 상품/계정에서 네이버 API의 보편적 필수값임을 뜻하지는 않습니다."
+      ],
+      "fields": [
+        {
+          "id": "delivery-type",
+          "label": "배송 방식",
+          "apiPath": "originProduct.deliveryInfo.deliveryType",
+          "type": "enum",
+          "requiredInForm": true,
+          "example": "DELIVERY"
+        },
+        {
+          "id": "delivery-attribute",
+          "label": "배송 속성",
+          "apiPath": "originProduct.deliveryInfo.deliveryAttributeType",
+          "type": "enum",
+          "requiredInForm": true,
+          "example": "NORMAL"
+        },
+        {
+          "id": "delivery-company",
+          "label": "택배사 코드",
+          "apiPath": "originProduct.deliveryInfo.deliveryCompany",
+          "type": "string",
+          "requiredInForm": true,
+          "notes": "판매자센터 설정에서 유효한 코드를 확인합니다."
+        },
+        {
+          "id": "outbound-location",
+          "label": "출고지 ID",
+          "apiPath": "originProduct.deliveryInfo.outboundLocationId",
+          "type": "string",
+          "requiredInForm": true,
+          "notes": "판매자센터의 등록된 출고지 ID"
+        },
+        {
+          "id": "delivery-fee-type",
+          "label": "배송비 유형",
+          "apiPath": "originProduct.deliveryInfo.deliveryFee.deliveryFeeType",
+          "type": "enum",
+          "requiredInForm": true,
+          "allowedValues": ["FREE", "CONDITIONAL_FREE", "CHARGE"]
+        },
+        {
+          "id": "delivery-base-fee",
+          "label": "기본 배송비",
+          "apiPath": "originProduct.deliveryInfo.deliveryFee.baseFee",
+          "type": "integer",
+          "unit": "KRW",
+          "requiredInForm": true,
+          "example": 3000
+        },
+        {
+          "id": "free-conditional-amount",
+          "label": "무료 배송 기준 금액",
+          "apiPath": "originProduct.deliveryInfo.deliveryFee.freeConditionalAmount",
+          "type": "integer",
+          "unit": "KRW",
+          "requiredWhen": "배송비 유형이 조건부 무료인 경우",
+          "example": 50000
+        },
+        {
+          "id": "delivery-pay-type",
+          "label": "배송비 결제 방식",
+          "apiPath": "originProduct.deliveryInfo.deliveryFee.deliveryFeePayType",
+          "type": "enum",
+          "requiredInForm": true,
+          "example": "PREPAID"
+        },
+        {
+          "id": "delivery-bundle",
+          "label": "묶음 배송 가능 여부",
+          "apiPath": "originProduct.deliveryInfo.deliveryBundleGroupUsable",
+          "type": "boolean",
+          "requiredInForm": true
+        },
+        {
+          "id": "return-company-priority",
+          "label": "반품 택배사 기준",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.returnDeliveryCompanyPriorityType",
+          "type": "enum",
+          "requiredInForm": true,
+          "example": "PRIMARY"
+        },
+        {
+          "id": "return-delivery-fee",
+          "label": "반품 배송비",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.returnDeliveryFee",
+          "type": "integer",
+          "unit": "KRW",
+          "requiredInForm": true
+        },
+        {
+          "id": "exchange-delivery-fee",
+          "label": "교환 배송비",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.exchangeDeliveryFee",
+          "type": "integer",
+          "unit": "KRW",
+          "requiredInForm": true
+        },
+        {
+          "id": "shipping-address-id",
+          "label": "교환 발송지 주소 ID",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.shippingAddressId",
+          "type": "integer",
+          "requiredInForm": true,
+          "notes": "판매자센터에 설정된 주소 ID"
+        },
+        {
+          "id": "return-address-id",
+          "label": "반품 주소 ID",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.returnAddressId",
+          "type": "integer",
+          "requiredInForm": true,
+          "notes": "판매자센터에 설정된 주소 ID"
+        },
+        {
+          "id": "free-return-insurance",
+          "label": "무료 반품 보험 적용 여부",
+          "apiPath": "originProduct.deliveryInfo.claimDeliveryInfo.freeReturnInsuranceYn",
+          "type": "boolean",
+          "requiredInForm": true
+        }
+      ]
+    }
+  ],
+  "notCurrentlyCollected": [
+    {
+      "label": "상품 옵션",
+      "notes": "현재 등록 화면은 옵션 조합별 가격/재고 입력을 지원하지 않습니다. 옵션 상품은 이 화면만으로 등록하지 말고 별도 구현이 필요합니다."
+    },
+    {
+      "label": "추가 이미지",
+      "notes": "현재 등록 화면은 대표 이미지 한 장만 업로드합니다."
+    },
+    {
+      "label": "상품별 판매 시작/종료일 및 예약 판매 설정",
+      "notes": "현재 등록 화면에서 입력하지 않습니다."
+    }
+  ],
+  "officialDocumentation": [
+    {
+      "title": "일반 상품 등록",
+      "url": "https://apicenter.commerce.naver.com/docs/commerce-api/current/create-product-product"
+    },
+    {
+      "title": "원상품 정보 구조체",
+      "url": "https://apicenter.commerce.naver.com/docs/commerce-api/current/schemas/%EC%9B%90%EC%83%81%ED%92%88-%EC%A0%95%EB%B3%B4-%EA%B5%AC%EC%A1%B0%EC%B2%B4"
+    }
+  ]
+}
