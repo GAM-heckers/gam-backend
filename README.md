@@ -74,3 +74,39 @@ with seller-specific information.
 This is UI sample data, not a confirmed Naver Commerce API request body. Mock
 addresses, courier, image URL, category, tax, and product details must be
 verified or replaced before any real registration.
+
+## .NET AI and MCP service (hybrid setup)
+
+The existing Express API remains the source of SmartStore mock data. A separate
+.NET 10 service provides a Microsoft Agent Framework chat endpoint and an MCP
+tool that reads the Express registration-sample endpoint.
+
+Run both services locally through Aspire:
+
+```bash
+dotnet run --project aspire/AppHost
+```
+
+Aspire runs the Express API and the .NET AI/MCP service together. The .NET
+service exposes:
+
+- `GET /health`
+- `POST /api/agent/chat` with `{"message":"상품 등록 입력 항목을 알려줘"}`
+- `POST /api/agent/product-image/analyze` as `multipart/form-data`, with the
+  image in the `image` field (JPEG, PNG, or WebP; up to 10 MB). The response
+  contains a draft extraction and always requires human review.
+- MCP Streamable HTTP at `/mcp`, with the
+  `get_smartstore_registration_sample` tool
+
+Set `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_DEPLOYMENT` in the environment to
+enable AI chat and image analysis. The deployment must use a vision-capable
+model that accepts image input. Authenticate either with
+`AZURE_OPENAI_API_KEY`, or omit the key and use Azure credentials available to
+`DefaultAzureCredential` (such as `az login` locally or a managed identity in
+Azure). Without endpoint or deployment settings, AI requests return HTTP 503.
+Uploaded images are sent to Azure OpenAI for analysis and are not saved by this
+service.
+
+The .NET service calls the existing Express endpoint through Aspire service
+discovery. The MCP tool and Agent Framework function share the same operation,
+so both return the frontend mock data without duplicating it.
