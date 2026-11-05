@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 청도 농가 매출 관리자
 
 청도 지역의 소규모 농가가 상품과 재고를 관리하고, 온라인 판매 현황 및 농산물 시세를 한곳에서 확인하도록 돕는 매출 관리 도구입니다. 온라인 판매에 익숙하지 않은 사용자도 쉽게 사용할 수 있도록 큰 글씨, 쉬운 표현, 명확한 등록·동기화 상태를 지향합니다.
@@ -29,3 +30,81 @@
 - 외부 API 자격 증명은 서버 측 비밀 저장소나 환경 변수로 관리하며, 프런트엔드와 공개 저장소에 노출하지 않습니다.
 - API가 제공하지 않는 매출·환불·정산 값을 추정해 사실처럼 표시하지 않습니다.
 - API 미연동 또는 샘플 데이터는 사용자에게 분명하게 표시합니다.
+=======
+# gam-backend
+
+## SmartStore product preview
+
+Run the backend from the `backend` directory:
+
+```bash
+cd backend
+npm run dev
+```
+
+`GET /api/smartstore/products/sample` returns a sample. Submit product data to
+`POST /api/smartstore/products/preview` as JSON:
+
+```json
+{
+  "productName": "샘플 상품",
+  "price": 18000,
+  "boxCount": 3,
+  "weightKg": 4.5
+}
+```
+
+The response contains a flat `product` object for direct frontend field
+mapping, and a `naverMapping` object showing how those values are represented
+in the SmartStore draft:
+
+```json
+{
+  "seller": {
+    "sellerId": "seller-demo-001",
+    "channel": "NAVER_SMARTSTORE",
+    "storeName": "청도 테스트 스토어",
+    "registrationStatus": "UNREGISTERED",
+    "isMock": true
+  },
+  "product": {
+    "productName": "샘플 상품",
+    "price": 18000,
+    "priceCurrency": "KRW",
+    "boxCount": 3,
+    "weightKg": 4.5
+  },
+  "naverMapping": {
+    "productName": "샘플 상품",
+    "salePrice": {
+      "amount": 18000,
+      "currency": "KRW"
+    },
+    "boxCount": 3,
+    "weight": {
+      "value": 4.5,
+      "unit": "KG"
+    }
+  },
+  "integration": {
+    "mode": "MOCK",
+    "externalApiReady": false
+  }
+}
+```
+
+`naverMapping` is a local mapping preview, not a confirmed official Naver
+Commerce API request schema. No request is sent to Naver.
+
+## SmartStore registration form mock data
+
+`GET /api/smartstore/products/registration-sample` returns JSON mock data for
+the frontend registration form, grouped into product, origin/support, food
+notice, certification, unit price, and delivery/claims sections. The response
+includes the mock seller and notes identifying values that must be replaced
+with seller-specific information.
+
+This is UI sample data, not a confirmed Naver Commerce API request body. Mock
+addresses, courier, image URL, category, tax, and product details must be
+verified or replaced before any real registration.
+>>>>>>> develop
